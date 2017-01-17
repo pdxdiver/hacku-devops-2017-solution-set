@@ -23,8 +23,8 @@ $ git fork
 
 ### Step 3 - Install local travis client and login using github credentials
 ```bash 
-sudo gem install travis
-travis login --auto
+$ sudo gem install travis
+$ travis login --auto
 ```
 ### Step 4 - AWS Configuration
 1. [Do Steps 1-3 in AWS tutorial to setup bucket policy](http://docs.aws.amazon.com/gettingstarted/latest/swh/setting-up.html)
