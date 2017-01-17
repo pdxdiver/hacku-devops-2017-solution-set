@@ -21,28 +21,37 @@ $ git fork
 2. Add your repository
 3. Activate the repository **<github user name>/programmingforprogress-frontend**
 
-### Step 3 - Travis Installation
+### Step 3 - Install local travis client and login using github credentials
 ```bash 
 sudo gem install travis
+travis login --auto
 ```
 ### Step 4 - AWS Configuration
 1. [Do Steps 1-3 in AWS tutorial to setup bucket policy](http://docs.aws.amazon.com/gettingstarted/latest/swh/setting-up.html)
 2. [Follow the instructions to create your AWS CLI credentials](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html)
 
-### Step 5 - Configure Travis build config file
+### Step 5 - Configure Travis build config file replacing with your AWS key id
 Create .travis.yml file and save to project directory
 ```yaml
 language: node_js
 node_js:
-    - "6.0"
+- '6.0'
+before_install: npm install mocha
 install: npm install
-
 deploy:
   provider: s3
-  access_key_id: "<AWS Key ID>"
-  secret_access_key: "<AWS Key ID>"
-  bucket: "<Your BucketName>"
+  access_key_id: <access_key_id>
+  secret_access_key:
+  bucket: <bucket_name>
+  region: us-west-2
 ```
+We need to encrypt the our secret access key. Do not store your AWS credentials in your repository. From the command line:
+
+```bash
+$ travis encrypt --add deploy.secret_access_key 
+```
+When prompted enter your AWS Secret key
+
 ### Step 5 - Push changes & check build
 ```bash
 $ git add .
@@ -52,20 +61,11 @@ Switch to travis page and watch build. It will fail.
 
 ### Step 6 - Install Mocha & Setup Tests
 
-Change travis config to install mocha framework
-```yaml
-language: node_js
-node_js:
-    - "6.0"
-before_install: npm install mocha
-install: npm install
+Add the following line before the **install:** line to install mocha framework
 
-deploy:
-  provider: s3
-  access_key_id: "<AWS Key ID>"
-  secret_access_key: "<AWS Key ID>"
-  bucket: "<Your BucketName>"
-```
+`
+before_install: npm install mocha
+`
 
 From your local command line:
 ```bash
@@ -83,7 +83,6 @@ create a stubbed unit test function
 ```bash
 $ mkdir test
 ```
-
 in your favorite editor create the file test/test.js with the following:
 
 ```javascript
