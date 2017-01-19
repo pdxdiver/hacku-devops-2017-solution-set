@@ -40,7 +40,6 @@ install: npm install
 deploy:
   provider: s3
   access_key_id: <access_key_id>
-  secret_access_key:
   bucket: <bucket_name>
   region: us-west-2
 ```
