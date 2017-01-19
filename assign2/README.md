@@ -36,7 +36,6 @@ Create .travis.yml file and save to project directory
 language: node_js
 node_js:
 - '6.0'
-before_install: npm install mocha
 install: npm install
 deploy:
   provider: s3
