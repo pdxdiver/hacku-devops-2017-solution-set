@@ -1,4 +1,4 @@
-## Assignment 2 - Create Continuous Integration Environment
+## Assignment 3 - Django DRF Continuous Integratation - Part 1
 
 ### Prerequsites
 - Student has Github account
