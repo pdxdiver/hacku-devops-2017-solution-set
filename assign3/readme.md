@@ -8,10 +8,11 @@
 ### Concepts Introduced
 - Docker Containers
 - Review DRF
+- Unit testing and code coverage
 
 ### Step 1 - Create Local Project Directory
 create a directory called fooProject and cd into it:
-```
+```bash
 mkdir fooProject && cd fooProject
 ```
 
@@ -19,8 +20,7 @@ mkdir fooProject && cd fooProject
 
 In the base project directory using your favorite editor create a file called: **Dockerfile** with the following contents
 
-```yaml
-
+```
 FROM python:3.4
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
@@ -30,9 +30,9 @@ RUN pip install -r requirements.txt
 ADD . /code/
 ```
 
-Create a the docker compose file (**docker-compose.yml**) with the following contents that describes the web and db containers and linkages:
+Create a the docker compose file: `docker-compose.yml` with the following contents that describes the web and db containers and linkages:
 
-```
+```yaml
 db:
   image: postgres
 web:
@@ -49,15 +49,15 @@ web:
 **Notes:**
 
 * We give our web container access to the db container with the `link` command
-* Our app is exposed on port 8000. 
+* Our app is exposed on port 8000.
 * When we run `docker-compose up`, the `command` with be executed
 * Standard stack. Uses Postgres as the database.
-* We use gunicorn server. This is a production ready server so that we can run the same `docker-compose` in production. 
+* We use gunicorn server. This is a production ready server so that we can run the same `docker-compose` in production.
 
-Create the requirements **requirements.txt** file that describes our dependencies:
+Create the requirements in the `requirements.txt` file that describes our dependencies:
 
 ```
-django==1.9.2 
+django==1.9.2
 djangorestframework==3.3.2
 django-filter
 django-rest-swagger
@@ -77,52 +77,47 @@ gunicorn
 * The second block is a list of tools for testing and quality control
 * gunicorn is the server
 
-### Create a blank Django Project
+### Step 3 - Create Django Project
 
-In a docker terminal: 
+From the command line:
 
+```bash
+docker-compose run web django-admin.py startproject fooapi.
 ```
-docker-compose run web django-admin.py startproject todoapi .
-```
 
-This might take a while to run the first time as it downloads all the base images and does any legwork defined in `Dockerfile`.
+The first invocation will download all the base images and software installation defined in the `Dockerfile`.
 
 **Notes:**
 
-* This will run `docker-compose up` and setup our docker environment as specified in our `docker-compose.yml` file. 
-* All commands should be run with `docker-compose`. This will run commands within our container. You should never run a command directly on your box.
+* This will run `docker-compose up` and setup our docker environment as specified in our `docker-compose.yml` file.
+* All commands should be run with `docker-compose`. This will run commands within our container. You should never run a command directly on your local.
 
-You should now see a new folder called `todoapi` in the current directory. 
+You should now see a new folder called `fooapi` in the current directory.
 
 At this stage, your top level directory should look something like this:
 
-```
+```bash
 Dockerfile
 docker-compose.yml
 manage.py
 requirements.txt
-[todoapi]
+[fooapi]
 ```
+### Step 4 - Running the Application
 
-### Playing with your application: 
-
-**To run the app**
-
-```
+```bash
 docker-compose up
 ```
+### Step 5 - Unit Tests
 
-**To run the tests**
-
-```
+Run some tests
+```bash
 docker-compose run web python manage.py test
 ```
 
-**To auto-run the tests**
+Create a file called `scent.py` with the following contents:
 
-Create a file called scent.py:
-
-```
+```python
 from subprocess import call
 from sniffer.api import runnable
 
@@ -133,26 +128,24 @@ def execute_tests(*args):
     return call(fn) == 0
 ```
 
-Then you can run: 
+From the command line:
 
-```
+```bash
 docker-compose run web sniffer
 ```
-
 * This will automatically run the tests each time you make changes to the code
 
-**Generate a test coverage report**
+### Step 5 - Unit Test Coverage Reporting
 
-**Generate coverage:**
+* Generate code coverage report to stdout
+From the command line:
 
-```
+```bash
 docker-compose run web coverage run --source='.'  manage.py test
 ```
+* Generate code coverage report to HTML
 
-**Generate an html report**
-
-```
+```bash
 docker-compose run web coverage html --directory=reports
 ```
-
 You will then find your coverage report in `reports/index.html`
