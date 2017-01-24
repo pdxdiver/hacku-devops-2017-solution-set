@@ -3,6 +3,7 @@
 ### Prerequsites
 - Student has Github account
 - Student has Docker installed
+- Adequate bandwidth. This is not a cafe exercise.
 
 ### Concepts Introduced
 - Docker Containers
