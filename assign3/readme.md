@@ -82,7 +82,7 @@ gunicorn
 From the command line:
 
 ```bash
-docker-compose run web django-admin.py startproject fooapi
+docker-compose run web django-admin.py startproject fooapi .
 ```
 
 The first invocation will download all the base images and software installation defined in the `Dockerfile`.
